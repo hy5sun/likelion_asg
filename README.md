@@ -2,5 +2,6 @@
 ```
 📁 week 1
  ㄴ 📁 google_login
- ㄴ mealTicket.js
+ ㄴ 📄 javaScript_study.md
+ ㄴ 📄 mealTicket.js
  ```
