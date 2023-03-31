@@ -49,7 +49,7 @@ const FOODS_PRICE = {
   돈까스: '7000', // not number, it is string
   제육: '5000',
   비빔밥: '4000',
-};
+}; 
 const PEOPLE_TYPE = ['student', 'professor', 'employee'];
 const PEOPLE_INFOS = [
   {
@@ -74,14 +74,34 @@ const PEOPLE_INFOS = [
   },
   {
     name: '대학원생',
-    type: 'studnet',
+    type: 'student',
     food: '짬뽕',
   },
 ];
 
 // 식권 종이를 출력합니다. 식권 종이에는 이름과 금액이 있어야합니다.
 const getTicket = (peopleName, type, food) => {
-  // 코드 작성
+  if (Object.keys(FOODS_PRICE).includes(food)) { //food_price key값이 food 원소에 포함되어 있다면 가격 변수 저장
+    var price = parseInt(FOODS_PRICE[food]); // +FOODS_PRICE[food]로 대처 가능
+  } else {
+    return '그런거 안팔아요';
+  }
+
+  if (PEOPLE_TYPE.includes(type)) { // type이 학생, 교수, 직원 중 하난지 검사
+    if (type == 'student') // 부가세 계산
+      price += 100;
+    else if (type == 'employee')
+      price += 300;
+    else if (type == 'professor')
+      price += 500;
+  } else { 
+    return '찾았다 요놈!';
+  }
+  var mealTicket = { // 객체 생성
+    name: peopleName,
+    price: price
+  };
+  return mealTicket;
   // return {name: 이름, price: 내야하는 금액}
   // return '찾았다 요놈!'
   // return '그런거 안팔아요'
@@ -89,6 +109,17 @@ const getTicket = (peopleName, type, food) => {
 
 // 식권 지불 금액을 계산하는 함수를 완성하세요
 const getTickets = (ticketInfos) => {
+  var answer = new Array(); // 주문 정보를 저장할 배열 생성
+  for (var customer of ticketInfos) { // ticketInfos 속 객체 하나씩
+    var ticket = getTicket(customer.name, customer.type, customer.food);
+    if (typeof ticket === 'object') { // 객체 타입이면 문자열로 바꿔줘야 함
+      ticket = (Object.values(ticket)).toString(); // value 값을 문자열로 바꿔줍니다. 콤마를 기준으로 분리해줘요.
+      ticket = ticket.replace(/,/g, ": "); //콤마를 : 로 대체해줍니다.
+    }
+    answer.push(ticket); // 정답 배열에 추가 (객체 타입 아니면 바로 추가)
+  }
+
+  return answer;
   // getTicket 함수를 이용해 PEOPLE_INFOS가 내야하는 식권 정보를 알아내세요
 };
 
