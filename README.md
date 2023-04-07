@@ -3,4 +3,7 @@
 📁 week 1
  ㄴ 📁 google_login
  ㄴ mealTicket.js
+ 
+📁 week 2
+ ㄴ todo.js
  ```
