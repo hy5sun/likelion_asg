@@ -31,44 +31,74 @@ let id = 0;
  * @param {{ id: number, title: string, text: string } | null | number} value
  * */
 const todoControl = (command, value) => {
-  // 대충 뭘 작성함
+  switch (command) { // switch 문을 통해 알맞은 command 실행
+    case 'create':
+      createTodo(value);
+      break;
+    case 'delete':
+      deleteTodo(value);
+      break;
+    case 'read':
+      readTodo(value);
+      break;
+    case 'update':
+      updateTodo(value);
+      break;
+    default: // 없으면
+      console.log('command error!'); //에러에요!
+      break;
+  }
 };
 
 // 보너스: newTodo를 비구조화 할당하여 todos에 추가하세요.
 /** @param {{ id: number, title: string, text: string }} newTodo */
 const createTodo = (newTodo) => {
-  // todos에 새로운 todo를 삽입
-  // ㅇㅇㅇ
+    const todo = { //newTodo의 id, title, text를 받아 객체 todo에 저장
+      id: newTodo.id,
+      title: newTodo.title,
+      text: newTodo.text
+    };
+
+    todos.push(todo); // todos에 새로운 todo 추가
 };
 
 // 출력 형식: 'id: 0, title: 타이틀, text: 텍스트'
 // 보너스: 리터럴 문자를 활용해 출력하세요.
 const readTodo = () => {
-  // todos를 하나씩 출력 형식에 맞춰 출력
-  // ㅇㅇㅇ
+  todos.forEach(todo =>{ //forEach 문으로 todos 돌기. 객체를 하나씩 todo에 저장하면서 돕니다
+    console.log(`id: ${todo.id}, title: ${todo.title}, text: ${todo.text}`);
+  });
 };
 
 // 에러처리: 만약 업데이트하려는 todo를 찾을 수 없는 경우 'id = (n)에 맞는 todo를 찾을 수 없습니다.' 를 출력하세요.
 // 보너스: if문을 쓰지 말고 업데이트 하세요. 단, 에러 처리에는 if문을 써도 됩니다. (힌트: 논리연산자)
 /** @param {{ id: number, title: string, text: string }} targetTodo */
-const updateTodo = (targetTodo) => {
-  // if (업데이트 하고자 하는 todo를 찾을 수 없다면) {
-  //   return 에러 메시지를 출력하세요
-  // }
-  // 여기에 업데이트 로직을 작성하세요
-  // ㅇㅇㅇ
+const updateTodo = (targetTodo) => { 
+  const findTodo = todos.find(todo => todo.id === targetTodo.id); //todos 속 객체 todo의 id와 targetTodo의 id가 같은 걸 찾아내고, findTodo에 저장
+    if (!findTodo) { //id가 같은 게 없으면
+      console.log(`id = ${targetTodo.id}에 맞는 todo를 찾을 수 없습니다.`); 
+    } else { //있으면
+      findTodo.title = targetTodo.title; // findTodo의 title을 targetTodo의 title로 수정
+      findTodo.text = targetTodo.text;
+    }
 };
 
 // 에러처리: 만약 업데이트하려는 todo를 찾을 수 없는 경우 'id = n에 맞는 todo를 찾을 수 없습니다.' 를 출력하세요.
 // 보너스: filter 함수를 사용해 구현해보세요
 /** @param {number} id */
-const deleteTodo = (id) => {
-  // if (해당하는 todo id가 todo 데이터에 없다면) {
-  //   return console.log(여기에 에러 메시지를 쓰세요);
-  // }
-  // 여기에 삭제 로직을 작성하세요
-  //ㅇㅇㅇ
+const deleteTodo = (id) => { 
+    if (!todos.find(todo => todo.id === id)) { //파라미터 id와 todo의 id가 같은 게 없으면
+      console.log(`id = ${id}에 맞는 todo를 찾을 수 없습니다.`);
+    } else { // 일치하는 게 있으면
+      todos = todos.filter(todo => todo.id !== id); //filter 함수를 통해 파라미터 id와 다른 todo의 id만 todos에 다시 저장한다. (id가 같은 애들은 걸러냄)
+      /*
+      filter 함수
+      특정 조건을 만족하는 새로운 배열을 만들 때 사용한다.
+      화살표 뒤에 있는 것이 조건에 해당한다.
+      */
+    }
 };
+
 
 /*
     예상출력:
