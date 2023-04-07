@@ -4,4 +4,7 @@
  ㄴ 📁 google_login
  ㄴ 📄 javaScript_study.md
  ㄴ 📄 mealTicket.js
+ 
+📁 week 2
+ ㄴ 📄 todo.js
  ```
