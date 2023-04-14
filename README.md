@@ -7,4 +7,10 @@
  
 📁 week 2
  ㄴ 📄 todo.js
+ 
+ 📁 week 3
+ ㄴ 📁 2.5_typeScript
+ ㄴ 📁 2.6_decorator
+ ㄴ 📁 example_ch1
+ ㄴ 📄 study_notion.md
  ```
