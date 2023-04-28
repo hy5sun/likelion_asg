@@ -1,6 +1,7 @@
 import { Request } from 'express';
-import { Controller, Get, Req, Res, HttpCode, HttpException, Body, Param, Patch, BadRequestException, Header, Redirect, Query, Delete } from '@nestjs/common';
+import { Controller, Get, Req, HttpCode, Body, Param, Patch, BadRequestException, Header, Redirect, Delete, Res } from '@nestjs/common';
 import { AppService } from './app.service';
+import { UpdateUserDto } from './users/dto/update-user.dto';
 
 
 @Controller()

@@ -3,11 +3,11 @@
       "module": "commonjs",
       "moduleResolution": "Node",
       "target": "ESNext",
-      "noImplicitAny": true,
+      "noImplicitAny": false,
       "removeComments": true,
       "outDir": "dist",
       "esModuleInterop": true,
-      "experimentalDecorators": true
+      "experimentalDecorators": true,
     },
     "include": [
       "src/**/*"
