@@ -1,0 +1,13 @@
+{
+  "name": "clistagram",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "readline": "^1.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.15.13",
+    "typescript": "^5.0.4"
+  }
+}
