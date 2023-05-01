@@ -6,7 +6,7 @@ import { NOTFOUND } from 'dns';
 
 @Injectable()
 export class UsersService {
-  private users: User[] = [];
+  users: User[] = [];
 
   create(createUserDto: CreateUserDto) {
     const { userId, userPw, userName } = createUserDto;
@@ -46,6 +46,17 @@ export class UsersService {
     user.userId = userId;
     user.userName = userName;
     this.users.push(user);
-    console.log('게시글 수정 완료');
+  }
+
+  remove(id: string) {
+    const user = this.users.find((user) => user.userId === id);
+
+    if (!user) {
+      throw new NotFoundException('User Not Found');
+    }
+
+    this.users = this.users.filter((user) => user.userId !== id);
+
+    return user;
   }
 }

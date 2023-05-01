@@ -7,7 +7,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post()
+  @Post('/signup')
   create(@Body() createUserDto: CreateUserDto) { // 본문에서 데이터를 추출
     return this.usersService.create(createUserDto);
   }
@@ -29,5 +29,9 @@ export class UsersController {
   ) {
     return this.usersService.update(userId, updateUserDto);
   }
-
+  
+  @Delete(':userId')
+  remove(@Param('userId') userId: string) {
+    return this.usersService.remove(userId);
+  }
 }
