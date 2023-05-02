@@ -1,24 +1,37 @@
-import { BadRequestException, HttpStatus, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { Post } from './posts.models';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class PostsService {
   private posts: Post[] = [];
+  private postid: number = 0;
 
   createPost(userId: string, createPostDto: CreatePostDto) {
+    if (!userId) {
+      throw new UnauthorizedException('로그인 안 하셨어요.');
+    }
+
+    // if (!this.users.find((user) => UsersService.userId === userId)) {
+    //   throw new NotFoundException('User Not Found');
+    // }
+
     const {content} =  createPostDto;
+    this.postid += 1;
     
     const post: Post = {
-      content,
-      id: this.posts.length + 1,
+      id: this.postid,
       writerId: userId,
+      content: content,
       createdAt: new Date(),
       updatedAt: new Date()
     };
 
     this.posts.push(post);
+    
+    return post;
   }
 
   findAll() { //완
@@ -34,6 +47,10 @@ export class PostsService {
   }
 
   update(userId: string, postId: number, updatePostDto: UpdatePostDto) {
+    if (!userId) {
+      throw new UnauthorizedException('로그인 안 하셨어요.');
+    }
+    
     const {content} = updatePostDto;
 
     const post = this.posts.find((post) => post.id === postId && post.writerId === userId);
