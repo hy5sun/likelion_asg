@@ -35,16 +35,19 @@ export class UsersService {
   }
 
   update(id: string, updateUserDto: UpdateUserDto) {
-    const {userId, userName} = updateUserDto;
-    const user = this.users.find((user) => user.userId === userId);
+    const user = this.users.find((user) => user.userId === id);
 
     if (!user) {
       throw new NotFoundException('User Not Exist');
     }
     this.users = this.users.filter((user) => user.userId !== id); // 기존 정보 제거
 
+    const {userId, userPw, userName} = updateUserDto;
+
     user.userId = userId;
+    user.userPw = userPw;
     user.userName = userName;
+
     this.users.push(user);
   }
 

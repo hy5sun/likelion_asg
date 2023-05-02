@@ -22,7 +22,7 @@ export class UsersController {
     return this.usersService.findOne(userId); // +: string -> number
   }
 
-  @Patch('updateOne/:userId')
+  @Patch('update/:userId')
   update(
     @Param('userId') userId: string,
     @Body() updateUserDto: UpdateUserDto,
