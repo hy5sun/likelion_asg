@@ -6,6 +6,8 @@ import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class PostsService {
+  constructor(private readonly UsersService: UsersService) {}
+
   private posts: Post[] = [];
   private postid: number = 0;
 
@@ -14,9 +16,7 @@ export class PostsService {
       throw new UnauthorizedException('로그인 안 하셨어요.');
     }
 
-    // if (!this.users.find((user) => UsersService.userId === userId)) {
-    //   throw new NotFoundException('User Not Found');
-    // }
+    this.UsersService.findOne(userId); // 유저가 없으면 예외처리
 
     const {content} =  createPostDto;
     this.postid += 1;
@@ -49,6 +49,8 @@ export class PostsService {
   update(userId: string, postId: number, updatePostDto: UpdatePostDto) {
     const post = this.posts.find((post) => post.id === postId);
 
+    this.UsersService.findOne(userId); // 유저가 없으면 예외처리
+
     if (!userId) {
       throw new UnauthorizedException('로그인 안 하셨어요.');
     }
@@ -60,8 +62,6 @@ export class PostsService {
     if (post.writerId !== userId) { //다른 유저로 포스트 수정 - 빠꾸
       throw new UnauthorizedException('회원님은 이 글에 대한 권한이 없습니다.');
     }
-
-    this.posts = this.posts.filter((post) => post.id === postId && post.writerId === userId); 
 
     this.posts = this.posts.filter((post) => post.id !== postId); 
     
@@ -77,6 +77,8 @@ export class PostsService {
   remove(userId: string, postId: number) {
     const post = this.posts.find((post) => post.id === postId);
 
+    this.UsersService.findOne(userId); // 유저가 없으면 예외처리
+
     if (!userId) {
       throw new BadRequestException('로그인이 안 되어 있어요.');
     }
@@ -89,6 +91,7 @@ export class PostsService {
       throw new UnauthorizedException('회원님은 이 글에 대한 권한이 없습니다.');
     }
 
-    this.posts = this.posts.filter((post) => post.id === postId); //정상적으로 포스트 삭제
+    this.posts = this.posts.filter((post) => post.id !== postId); //정상적으로 포스트 삭제
+
   }
 }
