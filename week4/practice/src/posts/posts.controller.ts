@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Headers } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Headers, Head } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
@@ -23,14 +23,14 @@ export class PostsController {
     return this.postsService.findOne(+id);
   }
 
-  @Patch('/update/:userId/:postId') // dto 필요
-  update(@Param('userId') userId: string, @Param('postId') postId: number, @Body() updatePostDto: UpdatePostDto) {
+  @Patch('/update/:postId') // dto 필요
+  update(@Headers('userId') userId: string, @Param('postId') postId: number, @Body() updatePostDto: UpdatePostDto) {
     
     return this.postsService.update(userId, postId, updatePostDto);
   }
 
-  @Delete('/delete/:userId/:postId')
-  remove(@Param('userId') userId: string, @Param('postId') postId: number) {
+  @Delete('/delete/:postId')
+  remove(@Headers('userId') userId: string, @Param('postId') postId: number) {
     return this.postsService.remove(userId, +postId);
   }
 }
