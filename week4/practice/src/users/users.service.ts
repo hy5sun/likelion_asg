@@ -2,7 +2,6 @@ import { BadRequestException, ConflictException, Injectable, NotFoundException }
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './users.models';
-import { NOTFOUND } from 'dns';
 
 @Injectable()
 export class UsersService {
@@ -20,6 +19,8 @@ export class UsersService {
       userName,
     };
     this.users.push(user);
+
+    return user;
   }
 
   findAll() {
@@ -49,6 +50,8 @@ export class UsersService {
     user.userName = userName;
 
     this.users.push(user);
+
+    return user;
   }
 
   remove(id: string) {
@@ -59,7 +62,5 @@ export class UsersService {
     }
 
     this.users = this.users.filter((user) => user.userId !== id);
-
-    return user;
   }
 }

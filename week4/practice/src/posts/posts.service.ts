@@ -47,13 +47,11 @@ export class PostsService {
   }
 
   update(userId: string, postId: number, updatePostDto: UpdatePostDto) {
+    const post = this.posts.find((post) => post.id === postId);
+
     if (!userId) {
       throw new UnauthorizedException('로그인 안 하셨어요.');
     }
-    
-    const {content} = updatePostDto;
-
-    const post = this.posts.find((post) => post.id === postId && post.writerId === userId);
 
     if(!post) {
       throw new NotFoundException('해당 게시글을 찾을 수 없습니다.');
@@ -64,22 +62,27 @@ export class PostsService {
     }
 
     this.posts = this.posts.filter((post) => post.id === postId && post.writerId === userId); 
+
+    this.posts = this.posts.filter((post) => post.id !== postId); 
     
-    post.content = content; //정상적으로 포스트 수정
+    const {content} = updatePostDto;
+    
+    post.content = content;
+    post.updatedAt = new Date();
 
     this.posts.push(post);
     return post;
   }
 
   remove(userId: string, postId: number) {
-    const post = this.posts.find((post) => post.id === postId && post.writerId === userId);
+    const post = this.posts.find((post) => post.id === postId);
 
     if (!userId) {
       throw new BadRequestException('로그인이 안 되어 있어요.');
     }
 
-    if (!post) { // 해당 아이디로 된 포스트가 없다면 빠꾸
-      throw new UnauthorizedException('회원님은 이 글에 대한 권한이 없습니다.');
+    if (!post) { // 해당 id의 포스트가 없으면 예외처리
+      throw new UnauthorizedException('해당 id의 글이 없습니다.');
     }
 
     if (post.writerId !== userId) { //다른 유저로 포스트 삭제 - 빠꾸
