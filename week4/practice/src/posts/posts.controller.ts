@@ -8,7 +8,7 @@ export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   
-  @Post('/create') // dto 필요
+  @Post('/create')
   create(@Headers('userId') userId: string, @Body() createPostDto: CreatePostDto) {
     return this.postsService.createPost(userId, createPostDto);
   }
@@ -23,14 +23,14 @@ export class PostsController {
     return this.postsService.findOne(+id);
   }
 
-  @Patch('/update/:postId') // dto 필요
+  @Patch('/update/:postId') 
   update(@Headers('userId') userId: string, @Param('postId') postId: number, @Body() updatePostDto: UpdatePostDto) {
     
-    return this.postsService.update(userId, postId, updatePostDto);
+    return this.postsService.update(userId, +postId, updatePostDto);
   }
 
   @Delete('/delete/:postId')
-  remove(@Headers('userId') userId: string, @Param('postId') postId: number) {
+  remove(@Param('userId') userId: string, @Param('postId') postId: number) {
     return this.postsService.remove(userId, +postId);
   }
 }
