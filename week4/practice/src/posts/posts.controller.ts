@@ -8,7 +8,7 @@ export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   
-  @Post('/create')
+  @Post('/create') 
   create(@Headers('userId') userId: string, @Body() createPostDto: CreatePostDto) {
     return this.postsService.createPost(userId, createPostDto);
   }
@@ -30,7 +30,7 @@ export class PostsController {
   }
 
   @Delete('/delete/:postId')
-  remove(@Param('userId') userId: string, @Param('postId') postId: number) {
+  remove(@Headers('userId') userId: string, @Param('postId') postId: number) {
     return this.postsService.remove(userId, +postId);
   }
 }
