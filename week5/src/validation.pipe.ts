@@ -1,10 +1,24 @@
-import { ArgumentMetadata, Injectable, PipeTransform } from "@nestjs/common";
+import { ArgumentMetadata, BadRequestException, Injectable, PipeTransform } from "@nestjs/common";
+import { plainToClass } from "class-transformer";
+import { validate } from "uuid";
 
 @Injectable()
-export class validationPipe implements PipeTransform {
-    transform(value: any, metadata: ArgumentMetadata) {
-        console.log(metadata);
+export class validationPipe implements PipeTransform<any> {
+    async transform(value: any, {metatype}: ArgumentMetadata) {
+        if (!metatype || this.toValidate(metatype)) { // metatype이 파이프가 지원하는 타입인지 검사
+            return value;
+        }
+        const object = plainToClass(metatype, value); // 순수 자바스크립트 객체를 클래스 객체로 수정
+        const errors = await validate(object);
+        if (errors === true) {
+            throw new BadRequestException('Validation failed');
+        }
         return value;
+    }
+
+    private toValidate(metatype: Function): boolean {
+        const types: Function[] = [String, Boolean, Number, Array, Object];
+        return !types.includes(metatype);
     }
 }
 
