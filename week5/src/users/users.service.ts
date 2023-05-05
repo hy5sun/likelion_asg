@@ -51,4 +51,8 @@ export class UsersService {
 
     throw new Error('Method not implemented.');
   }
+
+  async findAll() {
+    return 'findAll 실행';
+  }
 }

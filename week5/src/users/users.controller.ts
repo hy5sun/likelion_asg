@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseIntPipe, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseIntPipe, HttpStatus, DefaultValuePipe } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 
@@ -34,5 +34,15 @@ export class UsersController {
   @Get('/:id')
   async getUserInfo(@Param('id', new ParseIntPipe({errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE})) userId: number): Promise<UserInfo> { // @Param의 두 번째 인수로 pip를 넘겨 현재 실행 콘텍스트를 바인딩할 수 있다.
     return await this.usersService.getUserInfo(userId);
+  }
+
+  @Get()
+  findAll (
+    // DefaultValuePipe는 인수의 값에 기본값을 설정할 때 사용한다. 쿼리 매개변수가 생략된 경우 사용. 
+    @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset: number,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+  ) {
+    console.log(offset, limit);
+    return this.usersService.findAll();
   }
 }
