@@ -14,7 +14,9 @@ dotenv.config({
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.useGlobalPipes(new ValidationPipe()) // 전역으로 설정하기 위해 부트스트랩 과정에 적용
+  app.useGlobalPipes(new ValidationPipe({
+    transform: true, // class-transformer가 적용되게 하기 위함
+  })); // 전역으로 설정하기 위해 부트스트랩 과정에 적용
   await app.listen(3000);
 }
 bootstrap();
