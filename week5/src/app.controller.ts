@@ -2,16 +2,22 @@ import { Request } from 'express';
 import { Controller, Get, Req, HttpCode, Body, Param, Patch, BadRequestException, Header, Redirect, Delete, Res } from '@nestjs/common';
 import { AppService } from './app.service';
 import { UpdateUserDto } from './users/dto/update-user.dto';
+import { ConfigService } from '@nestjs/config';
 
 
 @Controller()
 export class AppController {
   usersService: any;
-  constructor(private readonly appService: AppService) {}
+  constructor(private readonly configService: ConfigService,) {}
+
+  @Get('/db-host-from-config')
+  getDatabaseHostFromConfigService(): string {
+    return this.configService.get('DATABASE_HOST');
+  }
 
   @Get('/hello') //http://localhost:3000/hello로 접속 가능 | he*lo 라고 쓰면 가운데 어떤 문자가 와도 상관없이 라우팅 패스를 구성하겠다는 뜻.
-  getHello(@Req() req: Request): string { // req: 요청객체. HTTP 요청
-    return this.appService.getHello();
+  getHello(): string {
+    return process.env.DATABASE_HOST;
   }
 
   @Get()
