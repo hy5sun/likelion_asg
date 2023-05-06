@@ -1,28 +1,28 @@
 import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { Post } from './posts.models';
+import { Posts } from './posts.models';
 import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class PostsService {
-  constructor(private readonly UsersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) {}
 
-  private posts: Post[] = [];
-  private postid: number = 0;
+  private posts: Posts[] = [];
+  private postId: number = 0;
 
   createPost(userId: string, createPostDto: CreatePostDto) {
     if (!userId) {
       throw new UnauthorizedException('로그인 안 하셨어요.');
     }
 
-    this.UsersService.findOne(userId); // 유저가 없으면 예외처리
+    this.usersService.findOne(userId); // 유저가 없으면 예외처리
 
     const {content} =  createPostDto;
-    this.postid += 1;
+    this.postId += 1;
     
-    const post: Post = {
-      id: this.postid,
+    const post: Posts = {
+      id: this.postId,
       writerId: userId,
       content: content,
       createdAt: new Date(),
@@ -49,7 +49,7 @@ export class PostsService {
   update(userId: string, postId: number, updatePostDto: UpdatePostDto) {
     const post = this.posts.find((post) => post.id === postId);
 
-    this.UsersService.findOne(userId); // 유저가 없으면 예외처리
+    this.usersService.findOne(userId); // 유저가 없으면 예외처리
 
     if (!userId) {
       throw new UnauthorizedException('로그인 안 하셨어요.');
@@ -65,9 +65,9 @@ export class PostsService {
 
     this.posts = this.posts.filter((post) => post.id !== postId); 
     
-    const {content} = updatePostDto;
+    //const {content} = updatePostDto;
     
-    post.content = content;
+    post.content = updatePostDto.content;
     post.updatedAt = new Date();
 
     this.posts.push(post);
@@ -77,7 +77,7 @@ export class PostsService {
   remove(userId: string, postId: number) {
     const post = this.posts.find((post) => post.id === postId);
 
-    this.UsersService.findOne(userId); // 유저가 없으면 예외처리
+    this.usersService.findOne(userId); // 유저가 없으면 예외처리
 
     if (!userId) {
       throw new BadRequestException('로그인이 안 되어 있어요.');
