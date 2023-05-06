@@ -7,10 +7,12 @@ import { Request, Response } from 'express';
 export class HttpExceptionFilter implements ExceptionFilter {
     constructor(private logger: Logger) {}
     
-    catch(exception: any, host: ArgumentsHost) {
+    catch(exception: Error, host: ArgumentsHost) {
         const ctx = host.switchToHttp();
         const res = ctx.getResponse<Response>();
         const req = ctx.getRequest<Request>();
+
+        const stack = exception.stack;
 
         if (!(exception instanceof HttpException)) { // HttpException이 아닌 에러는 알 수 없는 에러이므로 InternalServerErrorException 처리
             exception = new InternalServerErrorException();
@@ -22,9 +24,10 @@ export class HttpExceptionFilter implements ExceptionFilter {
             Timestamp: new Date(),
             url: req.url,
             response,
+            stack,
         }
 
-        console.log(log);
+        this.logger.log(log);
 
         res
         .status((exception as HttpException).getStatus())
