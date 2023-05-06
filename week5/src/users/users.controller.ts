@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseIntPipe, HttpStatus, DefaultValuePipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseIntPipe, HttpStatus, DefaultValuePipe, UseFilters } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 
@@ -6,11 +6,13 @@ import { Verify } from 'crypto';
 import { VerifyEmailDto } from './dto/verify-email.dto';
 import { UserLoginDto } from './dto/user-login.dto';
 import { UserInfo } from './dto/userInfo';
+import { HttpExceptionFilter } from '../http-exception.filter';
 
 @Controller('users')
 export class UsersController {
   constructor(private usersService: UsersService) {} // UsersService를 컨트롤러에 주입
 
+  @UseFilters(HttpExceptionFilter) // 특정 엔드포인트에 적용
   @Post()
   async createUser(@Body() dto: CreateUserDto): Promise<void> {
     const {name, email, password} = dto;

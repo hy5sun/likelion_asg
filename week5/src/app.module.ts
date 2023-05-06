@@ -4,6 +4,8 @@ import { EmailModule } from './email/email.module';
 import { ConfigModule } from '@nestjs/config'
 import emailConfig from './config/emailConfig';
 import { validationSchema } from './config/validationSchema';
+import { APP_FILTER } from '@nestjs/core';
+import { HttpExceptionFilter } from './http-exception.filter';
 
 @Module({
   imports: [ConfigModule.forRoot({
@@ -14,7 +16,12 @@ import { validationSchema } from './config/validationSchema';
   }),
     UsersModule, EmailModule],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
+  ],
 })
 export class AppModule {}
 

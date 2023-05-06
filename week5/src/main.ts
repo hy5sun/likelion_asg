@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import * as dotenv from 'dotenv';
 import path from 'path';
 import { ValidationPipe } from '@nestjs/common';
+import { HttpExceptionFilter } from './http-exception.filter';
 
 // dotenv 패키지를 직접 사용하는 경우
 dotenv.config({

@@ -81,4 +81,9 @@ export class AppController {
     ) {
       return 'userId: ${userId}, memoId: ${memoId}';
   }
+
+  @Get('/error')
+  error(foo: any): string {
+    return foo.bar(); // foo가 undefined기 때문에 Internal Server Error가 발생 / 기본적으로 JSON 형식으로 바꿔준다. 
+  }
 }
