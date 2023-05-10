@@ -7,7 +7,7 @@ import { UpdatePostDto } from './dto/update-post.dto';
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
-  @Post('posts')
+  @Post('create')
   create(@Body() createPostDto: CreatePostDto) {
     return this.postsService.createPost(createPostDto);
   }
