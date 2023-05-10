@@ -14,7 +14,7 @@ export class CreateAuthDto {
     @IsString()
     @MinLength(3)
     @MaxLength(30)
-    nickname: string;
+    userId: string;
 
     @IsString()
     @Matches(/^[A-Za-z\d!@#$%^7*()]{8, 30}$/)

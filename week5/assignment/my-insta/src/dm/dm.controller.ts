@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Headers } from '@nestjs/common';
 import { DmService } from './dm.service';
 import { CreateDmDto } from './dto/create-dm.dto';
 
@@ -7,8 +7,8 @@ export class DmController {
   constructor(private readonly dmService: DmService) {}
 
   @Post('send')
-  create(@Body() createDmDto: CreateDmDto) {
-    return this.dmService.sendDM(createDmDto);
+  create(@Headers('userId') userId: string, @Body() createDmDto: CreateDmDto) {
+    return this.dmService.sendDM(userId, createDmDto);
   }
 
   @Get()
@@ -16,8 +16,8 @@ export class DmController {
     return this.dmService.findAllDM();
   }
 
-  @Get(':nickname')
-  findOne(@Param('nickname') nickname: string) {
-    return this.dmService.findOneById(nickname);
+  @Get(':userId')
+  findOne(@Param('userId') userId: string) {
+    return this.dmService.findOneById(userId);
   }
 }
