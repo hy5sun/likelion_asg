@@ -1,36 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { EmailService } from 'src/email/email.service';
+import { CreateUserDto } from 'src/user/dto/create-user.dto';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly emailService: EmailService) {}
-  users: CreateAuthDto[] = [];
+  constructor(private readonly userService: UserService) {}
 
-  async sendEmail(email: string) { // 인증 이메일 보내기
-    const user = this.users.find((user) => email === user.email);
-    try{
-      return await this.emailService.send(email);
-    } catch(e) {
-      console.log(e);
-    }
-    
+  async signup(createUserDto: CreateUserDto) { // 회원가입
+    this.userService.createAccount(createUserDto);
   }
 
-  async signup(createAuthDto: CreateAuthDto) { // 회원가입
-    const { email, name, userId, password} = createAuthDto;
-    
-    const user: CreateAuthDto = {
-      email,
-      name,
-      userId,
-      password,
-    };
-
-    this.users.push(user);
-  }
-
-  findAll() { // 테스트용 유저 찾기
-    return this.users;
+  async verificationEmail(email: string) { // 이메일 인증
+    this.userService.sendEmail(email);
   }
 }

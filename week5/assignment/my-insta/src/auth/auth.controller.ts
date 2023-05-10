@@ -1,25 +1,19 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { CreateAuthDto } from './dto/create-auth.dto';
+import { CreateUserDto } from 'src/user/dto/create-user.dto';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('signup')
-  async signUp(@Body() createAuthDto: CreateAuthDto) {
-    return await this.authService.signup(createAuthDto);
+  async signup(@Body() createUserDto: CreateUserDto) { // CreateUserDto로 해도 되는 걸까요 회원가입Dto를 새로 만들어서 써야할까요
+    return await this.authService.signup(createUserDto);
   }
 
   @Post('send-verification-email')
-  async sendEmail(@Body() createAuthDto: CreateAuthDto) {
-    const { email } = createAuthDto;
-    
-    return await this.authService.sendEmail(email);
-  }
-
-  @Get()
-  findAll() {
-    return this.authService.findAll();
+  async verificationEmail(@Body() createUserDto: CreateUserDto) {
+    const { email } = createUserDto;
+    return await this.authService.verificationEmail(email);
   }
 }
