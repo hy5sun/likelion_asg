@@ -15,29 +15,35 @@ export class DmService {
     }
     
     this.userService.findUser(userId); // 해당 유저가 없으면 예외 처리
+    this.userService.findUser(receiver); 
 
     const dm: CreateDmDto = {
       receiver,
-      content
+      content,
+      writer: userId
     };
 
     this.directMessages.push(dm);
   }
 
-  findAllDM() { // 디엠 목록 조회
-    return this.directMessages;
+  findAllDM(userId: string) { // 디엠 목록 조회
+    if (!userId) {
+      throw new UnauthorizedException('로그인 해주세요.');
+    } 
+    const dm = this.directMessages.filter((dm) => dm.writer === userId); // 내가 보낸 디엠들로 추리기
+
+    return dm;
   }
 
-  findOneById(userId: string) { // 특정 유저와의 디엠 조회
-    const dm = this.directMessages.find((dm) => userId === dm.receiver);
-
-    if (!dm) {
-      throw new NotFoundException(`${userId}와의 메시지 내역이 없습니다.`);
-    }
+  findOneById(userId: string, receiverId: string) { // 특정 유저와의 디엠 조회
 
     if (!userId) {
       throw new UnauthorizedException('로그인 해주세요.');
     }
+
+    this.userService.findUser(receiverId); // 유저가 없으면 예외 처리
+    
+    const dm = this.directMessages.filter((dm) => dm.writer === userId && dm.receiver === receiverId);
 
     return dm;
   }

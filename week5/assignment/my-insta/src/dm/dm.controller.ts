@@ -12,12 +12,12 @@ export class DmController {
   }
 
   @Get()
-  findAll() {
-    return this.dmService.findAllDM();
+  findAll(@Headers('userId') userId: string,) {
+    return this.dmService.findAllDM(userId);
   }
 
-  @Get(':userId')
-  findOne(@Param('userId') userId: string) {
-    return this.dmService.findOneById(userId);
+  @Get(':receiverId')
+  findOne(@Headers('userId') userId: string, @Param('receiverId') receiverId: string) {
+    return this.dmService.findOneById(userId, receiverId);
   }
 }

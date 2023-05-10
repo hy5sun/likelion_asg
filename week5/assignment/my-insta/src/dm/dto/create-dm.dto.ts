@@ -6,4 +6,7 @@ export class CreateDmDto {
 
     @IsString()
     content: string; // 메시지 내용
+
+    @IsString()
+    writer: string; // 보내는 사람
 }
