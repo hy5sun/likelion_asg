@@ -18,9 +18,14 @@ export class PostsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOneByPostId(@Param('id') id: string) {
     return this.postsService.findOneByPostId(+id);
   }
+
+  @Get('/user/:userId') // RESTful 하지 않는 것 같지만.. 앞에 /user/를 지워버리면 findOneByPostId 가 실행됨..
+  findOneByUserId(@Param('userId') userId: string) {
+    return this.postsService.findOneByUserId(userId);
+  } 
 
   @Patch('update/:id')
   update(@Headers('userId') userId: string, @Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {

@@ -43,6 +43,16 @@ export class PostsService {
     return post;
   }
 
+  async findOneByUserId(userId: string) { // 특정 유저 글 조회
+    const ownPost = this.posts.filter((post) => post.writer === userId);
+
+    if (!ownPost) {
+      throw new NotFoundException('유저가 작성한 글이 없습니다.');
+    }
+
+    return ownPost;
+  }
+
   async updatePost(userId: string, id: number, updatePostDto: UpdatePostDto) { // 특정 피드 수정
     const post = this.posts.find((post) => post.id === id);
 
