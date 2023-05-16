@@ -6,11 +6,13 @@ import { UserService } from 'src/user/user.service';
 export class AuthService {
   constructor(private readonly userService: UserService) {}
 
-  async signup(createUserDto: CreateUserDto) { // 회원가입
+  // 회원가입
+  async signup(createUserDto: CreateUserDto) {
     this.userService.createAccount(createUserDto);
   }
 
-  async verificationEmail(email: string) { // 이메일 인증
+  // 이메일 인증
+  async verificationEmail(email: string) {
     this.userService.sendEmail(email);
   }
 }
