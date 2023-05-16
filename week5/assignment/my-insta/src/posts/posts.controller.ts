@@ -25,11 +25,6 @@ export class PostsController {
     return this.postsService.createPost(userId, createPostDto);
   }
 
-  // @Get()
-  // findAll() {
-  //   return this.postsService.findAll();
-  // }
-
   @Get(':id')
   findOneByPostId(@Param('id') id: string) {
     return this.postsService.findOneByPostId(+id);

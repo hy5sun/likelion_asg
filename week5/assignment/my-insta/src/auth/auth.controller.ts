@@ -12,7 +12,6 @@ export class AuthController {
 
   @Post('signup')
   async signup(@Body() signupDto: SignupDto) {
-    // CreateUserDto로 해도 되는 걸까요 회원가입Dto를 새로 만들어서 써야할까요
     return await this.userService.createAccount(signupDto);
   }
 
