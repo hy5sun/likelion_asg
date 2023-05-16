@@ -36,8 +36,8 @@ export class PostsController {
   }
 
   @Get()
-  findOneByUserId(@Query('userId') userId: string) {
-    return this.postsService.findOneByUserId(userId);
+  findByUserId(@Query('userId') userId: string) {
+    return this.postsService.findByUserId(userId);
   }
 
   @Patch(':id')

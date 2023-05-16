@@ -49,8 +49,8 @@ export class PostsService {
   }
 
   // 특정 유저 글 조회
-  async findOneByUserId(userId: string) {
-    const ownPost = this.posts.find((post) => userId === post.writer);
+  async findByUserId(userId: string) {
+    const ownPost = this.posts.filter((post) => userId === post.writer);
 
     this.userService.findUser(userId); // 유저가 없으면 예외 처리
 
