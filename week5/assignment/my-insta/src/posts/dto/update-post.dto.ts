@@ -1,10 +1,4 @@
-import { PartialType } from '@nestjs/mapped-types';
+import { PickType } from '@nestjs/mapped-types';
 import { CreatePostDto } from './create-post.dto';
-import { IsString, MaxLength, MinLength } from "class-validator";
 
-export class UpdatePostDto extends PartialType(CreatePostDto) {
-    @IsString()
-    @MinLength(1)
-    @MaxLength(2200)
-    content: string;
-}
+export class UpdatePostDto extends PickType(CreatePostDto, ['content']) {} // CreatePostDto에서 content만 뽑아옴. 이때 @IsString() 이런건 함께 불러봐줌.
