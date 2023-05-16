@@ -6,6 +6,6 @@ import { UserModule } from 'src/user/user.module';
 @Module({
   imports: [UserModule],
   controllers: [DmController],
-  providers: [DmService]
+  providers: [DmService],
 })
 export class DmModule {}
