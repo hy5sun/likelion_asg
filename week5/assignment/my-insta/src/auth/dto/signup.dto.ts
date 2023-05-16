@@ -8,8 +8,6 @@ import {
 
 export class SignupDto {
   @IsEmail()
-  @IsString()
-  @MaxLength(60)
   email: string;
 
   @IsString()
