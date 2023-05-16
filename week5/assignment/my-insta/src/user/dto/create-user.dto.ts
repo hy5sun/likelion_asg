@@ -1,4 +1,10 @@
-import { IsEmail, IsString, Matches, MaxLength, MinLength } from "class-validator";
+import {
+  IsEmail,
+  IsString,
+  Matches,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
 
 export class CreateUserDto {
   @IsEmail()
@@ -20,4 +26,3 @@ export class CreateUserDto {
   @Matches(/^[A-Za-z\d!@#$%^7*()]{8, 30}$/)
   password: string;
 }
-  

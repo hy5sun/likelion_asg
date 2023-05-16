@@ -7,6 +7,6 @@ import { EmailModule } from 'src/email/email.module';
   imports: [EmailModule],
   controllers: [UserController],
   providers: [UserService],
-  exports: [UserService]
+  exports: [UserService],
 })
 export class UserModule {}
