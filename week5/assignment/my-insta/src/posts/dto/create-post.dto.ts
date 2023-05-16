@@ -1,10 +1,5 @@
-import {
-  IsString,
-  MaxLength,
-  MinLength,
-  IsDate,
-  IsNumber,
-} from 'class-validator';
+import { IsString, MaxLength, MinLength, IsNumber } from 'class-validator';
+import { CreateDateColumn } from 'typeorm';
 
 export class CreatePostDto {
   @IsNumber()
@@ -20,6 +15,6 @@ export class CreatePostDto {
   @MinLength(30)
   writer: string;
 
-  @IsDate()
+  @CreateDateColumn()
   createdAt: Date;
 }
