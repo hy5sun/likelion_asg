@@ -1,16 +1,25 @@
 import { IsEmail } from 'class-validator';
-import { Column, Entity, OneToMany } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryColumn,
+} from 'typeorm';
 import { PostEntity } from '../../posts/entities/post.entity';
 import { CommentEntity } from '../../posts/comments/entities/comment.entity';
-import { CommonEntity } from 'src/common/entities/common.entity';
+import { DmEntity } from 'src/dm/entities/dm.entity';
 
 @Entity('User')
-export class UserEntity extends CommonEntity {
+export class UserEntity {
   @Column({ length: 30 })
   name: string;
 
-  @Column({ unique: true, nullable: false })
+  @PrimaryColumn({ unique: true })
   userId: string;
+
+  @CreateDateColumn()
+  createdAt: Date;
 
   @IsEmail()
   @Column({ unique: true, nullable: false })
@@ -22,6 +31,9 @@ export class UserEntity extends CommonEntity {
   @OneToMany(() => PostEntity, (post) => post.writerId)
   posts: PostEntity[];
 
-  @OneToMany(() => CommentEntity, (comment) => comment.id)
+  @OneToMany(() => CommentEntity, (comment) => comment.writerId)
   comments: CommentEntity[];
+
+  @OneToMany(() => DmEntity, (dm) => dm.writerId)
+  directMessages: DmEntity[];
 }
