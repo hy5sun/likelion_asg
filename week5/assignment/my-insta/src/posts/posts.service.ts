@@ -4,30 +4,32 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
-import { UpdatePostDto } from './dto/update-post.dto';
 import { UserService } from 'src/user/user.service';
-import { Post } from './posts.models';
 import { Comment } from './comments/comments.models';
 import { CreateCommentDto } from './comments/dto/create-comment.dto';
 import * as uuid from 'uuid';
+import { InjectRepository } from '@nestjs/typeorm';
+import { PostEntity } from './entities/post.entity';
+import { Repository } from 'typeorm';
+import { CommentEntity } from './comments/entities/comment.entity';
+import { ulid } from 'ulid';
 
 @Injectable()
 export class PostsService {
-  constructor(private readonly userService: UserService) {}
-  posts: Post[] = [];
-  comments: Comment[] = [];
+  constructor(
+    private readonly userService: UserService,
+    @InjectRepository(PostEntity)
+    private postsRepository: Repository<PostEntity>,
+    @InjectRepository(CommentEntity)
+    private commentsRepository: Repository<Comment>,
+  ) {}
 
+  // 포스트 작성
   async createPost(userId: string, createPostDto: CreatePostDto) {
-    // 포스트 작성
-    const { content } = createPostDto;
-
-    const post: Post = {
-      id: uuid,
-      content,
-      writer: userId,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
+    const post = new PostEntity();
+    post.id = ulid();
+    post.content = createPostDto.content;
+    post.writerId = createPostDto.writer;
 
     if (!userId) {
       throw new UnauthorizedException('로그인 해주세요');
@@ -35,12 +37,14 @@ export class PostsService {
 
     this.userService.findUser(userId); // 유저가 없으면 예외 처리
 
-    this.posts.push(post);
+    await this.postsRepository.save(post);
   }
 
   // 특정 피드 조회
-  async findOneByPostId(id: number) {
-    const post = this.posts.find((post) => id === post.id);
+  async findOneByPostId(id: string) {
+    const post = this.postsRepository.findOne({
+      where: { id: id },
+    });
 
     if (!post) {
       throw new NotFoundException('게시물을 찾을 수 없습니다.');
@@ -51,21 +55,27 @@ export class PostsService {
 
   // 특정 유저 글 조회
   async findByUserId(userId: string) {
-    const ownPost = this.posts.filter((post) => userId === post.writer);
+    const ownPost = await this.postsRepository.find({
+      where: { writerId: userId },
+    });
 
     this.userService.findUser(userId); // 유저가 없으면 예외 처리
 
     if (!ownPost) {
       console.log('유저가 작성한 글이 없어서 전체 피드를 제공해드려요');
-      return this.posts;
+      return this.postsRepository;
     }
 
     return ownPost;
   }
 
   // 특정 피드 수정
-  async updatePost(userId: string, id: number, updatePostDto: UpdatePostDto) {
-    const post = this.posts.find((post) => post.id === id);
+  async updatePost(userId: string, id: string, content: string) {
+    const post = await this.postsRepository.findOne({
+      where: { id: id },
+    });
+
+    post.content = content;
 
     this.userService.findUser(userId); // 유저가 없으면 예외 처리
 
@@ -77,22 +87,18 @@ export class PostsService {
       throw new NotFoundException('게시물을 찾을 수 없습니다.');
     }
 
-    if (post.writer !== userId) {
+    if ((await post).writerId !== userId) {
       throw new UnauthorizedException('해당 글에 접근할 권한이 없습니다.');
     }
 
-    this.posts = this.posts.filter((post) => post.id !== id);
-
-    const { content } = updatePostDto;
-
-    post.content = content;
-    post.updatedAt = new Date();
-    this.posts.push(post);
+    await this.postsRepository.save(post);
   }
 
   // 특정 피드 삭제
-  async removePost(userId: string, id: number) {
-    const post = this.posts.find((post) => post.id === id);
+  async removePost(userId: string, postId: string) {
+    const post = await this.postsRepository.findOne({
+      where: { id: postId },
+    });
 
     this.userService.findUser(userId); // 유저가 없으면 예외 처리
 
@@ -104,11 +110,11 @@ export class PostsService {
       throw new NotFoundException('게시물을 찾을 수 없습니다.');
     }
 
-    if (post.writer !== userId) {
+    if (post.writerId !== userId) {
       throw new UnauthorizedException('해당 글에 접근할 권한이 없습니다.');
     }
 
-    this.posts = this.posts.filter((post) => post.id !== id);
+    await this.postsRepository.delete({ id: postId });
   }
   // 댓글달기
   async createComment(
@@ -131,13 +137,13 @@ export class PostsService {
 
     this.userService.findUser(userId); // 유저가 없으면 예외 처리
 
-    this.comments.push(comment);
+    this.commentsRepository.save(comment);
   }
 
   async findByPostId(postId: string) {
-    const comment = this.comments.filter(
-      (comment) => postId === comment.postId,
-    );
+    const comment = await this.commentsRepository.find({
+      where: { postId: postId },
+    });
 
     if (!comment) {
       throw new NotFoundException('해당 게시물에는 댓글이 없습니다.');
