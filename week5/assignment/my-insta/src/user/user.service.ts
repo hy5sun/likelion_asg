@@ -6,6 +6,7 @@ import {
 import { EmailService } from 'src/email/email.service';
 import { User } from './users.models';
 import { CreateUserDto } from './dto/create-user.dto';
+import * as uuid from 'uuid';
 
 @Injectable()
 export class UserService {
@@ -16,6 +17,7 @@ export class UserService {
     const { email, name, userId, password } = createUserDto;
 
     const user: User = {
+      id: uuid,
       email,
       name,
       userId,
