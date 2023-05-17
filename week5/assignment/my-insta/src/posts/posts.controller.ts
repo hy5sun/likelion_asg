@@ -42,7 +42,7 @@ export class PostsController {
 
   @Get(':id')
   findOneByPostId(@Param('id') id: string) {
-    return this.postsService.findOneByPostId(+id);
+    return this.postsService.findOneByPostId(id);
   }
 
   @Get()
@@ -56,11 +56,11 @@ export class PostsController {
     @Param('id') id: string,
     @Body() updatePostDto: UpdatePostDto,
   ) {
-    return this.postsService.updatePost(userId, +id, updatePostDto);
+    return this.postsService.updatePost(userId, id, updatePostDto.content);
   }
 
   @Delete(':id')
   remove(@Headers('userId') userId: string, @Param('id') id: string) {
-    return this.postsService.removePost(userId, +id);
+    return this.postsService.removePost(userId, id);
   }
 }

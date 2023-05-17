@@ -29,7 +29,7 @@ export class PostsService {
     const post = new PostEntity();
     post.id = ulid();
     post.content = createPostDto.content;
-    post.writerId = createPostDto.writer;
+    post.writerId = userId;
 
     if (!userId) {
       throw new UnauthorizedException('로그인 해주세요');
