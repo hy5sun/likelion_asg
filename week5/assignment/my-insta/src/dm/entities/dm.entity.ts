@@ -13,8 +13,7 @@ export class DmEntity extends CommonEntity {
   @Column({ nullable: false })
   writerId: string;
 
-  @ManyToOne(() => UserEntity, (user) => user.userId)
-  @JoinColumn({ name: 'receiverId' })
-  @JoinColumn({ name: 'writerId' })
+  @ManyToOne(() => UserEntity, (user) => user.directMessages)
+  @JoinColumn({ name: 'writerId', referencedColumnName: 'userId' })
   user: UserEntity;
 }
