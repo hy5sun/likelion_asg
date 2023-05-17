@@ -15,7 +15,7 @@ export class CommentEntity extends CommonEntity {
   content: string;
 
   @ManyToOne(() => UserEntity, (user) => user.comments)
-  @JoinColumn({ name: 'writerId', referencedColumnName: 'id' })
+  @JoinColumn({ name: 'writerId', referencedColumnName: 'userId' })
   user: UserEntity;
 
   @ManyToOne(() => PostEntity, (post) => post.comments)

@@ -7,7 +7,6 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { UserService } from 'src/user/user.service';
 import { Comment } from './comments/comments.models';
 import { CreateCommentDto } from './comments/dto/create-comment.dto';
-import * as uuid from 'uuid';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PostEntity } from './entities/post.entity';
 import { Repository } from 'typeorm';
@@ -124,12 +123,10 @@ export class PostsService {
   ) {
     const { content } = createCommentDto;
 
-    const comment: Comment = {
-      id: uuid,
-      content,
-      writerId: userId,
-      postId: postId,
-    };
+    const comment = new CommentEntity();
+    comment.content = content;
+    comment.writerId = userId;
+    comment.postId = postId;
 
     if (!userId) {
       throw new UnauthorizedException('로그인 해주세요');
@@ -137,7 +134,7 @@ export class PostsService {
 
     this.userService.findUser(userId); // 유저가 없으면 예외 처리
 
-    this.commentsRepository.save(comment);
+    await this.commentsRepository.save(comment);
   }
 
   async findByPostId(postId: string) {
