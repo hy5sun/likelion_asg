@@ -7,23 +7,26 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { UserService } from 'src/user/user.service';
 import { Post } from './posts.models';
+import { Comment } from './comments/comments.models';
+import { CreateCommentDto } from './comments/dto/create-comment.dto';
+import * as uuid from 'uuid';
 
 @Injectable()
 export class PostsService {
   constructor(private readonly userService: UserService) {}
   posts: Post[] = [];
-  id = 0;
+  comments: Comment[] = [];
 
   async createPost(userId: string, createPostDto: CreatePostDto) {
     // 포스트 작성
     const { content } = createPostDto;
-    this.id += 1;
 
     const post: Post = {
-      id: this.id,
+      id: uuid,
       content,
       writer: userId,
       createdAt: new Date(),
+      updatedAt: new Date(),
     };
 
     if (!userId) {
@@ -38,8 +41,6 @@ export class PostsService {
   // 특정 피드 조회
   async findOneByPostId(id: number) {
     const post = this.posts.find((post) => id === post.id);
-
-    console.log('이게 실행되면 안 되는데요');
 
     if (!post) {
       throw new NotFoundException('게시물을 찾을 수 없습니다.');
@@ -85,6 +86,7 @@ export class PostsService {
     const { content } = updatePostDto;
 
     post.content = content;
+    post.updatedAt = new Date();
     this.posts.push(post);
   }
 
@@ -107,5 +109,40 @@ export class PostsService {
     }
 
     this.posts = this.posts.filter((post) => post.id !== id);
+  }
+  // 댓글달기
+  async createComment(
+    userId: string,
+    postId: string,
+    createCommentDto: CreateCommentDto,
+  ) {
+    const { content } = createCommentDto;
+
+    const comment: Comment = {
+      id: uuid,
+      content,
+      writerId: userId,
+      postId: postId,
+    };
+
+    if (!userId) {
+      throw new UnauthorizedException('로그인 해주세요');
+    }
+
+    this.userService.findUser(userId); // 유저가 없으면 예외 처리
+
+    this.comments.push(comment);
+  }
+
+  async findByPostId(postId: string) {
+    const comment = this.comments.filter(
+      (comment) => postId === comment.postId,
+    );
+
+    if (!comment) {
+      throw new NotFoundException('해당 게시물에는 댓글이 없습니다.');
+    }
+
+    return comment;
   }
 }

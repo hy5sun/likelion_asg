@@ -1,19 +1,17 @@
-import { IsString, MaxLength, MinLength, IsNumber } from 'class-validator';
+import { IsString, MinLength } from 'class-validator';
 import { CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
-export class CreatePostDto {
-  @IsNumber()
-  id: number;
-
+export class CreateCommentDto {
   @IsString()
-  @MinLength(1)
-  @MaxLength(2200)
   content: string;
 
   @IsString()
   @MinLength(2)
   @MinLength(30)
-  writer: string;
+  writerId: string;
+
+  @IsString()
+  postId: string;
 
   @CreateDateColumn()
   createdAt: Date;

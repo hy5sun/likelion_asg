@@ -12,6 +12,7 @@ import {
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { CreateCommentDto } from './comments/dto/create-comment.dto';
 
 @Controller('posts')
 export class PostsController {
@@ -23,6 +24,20 @@ export class PostsController {
     @Body() createPostDto: CreatePostDto,
   ) {
     return this.postsService.createPost(userId, createPostDto);
+  }
+
+  @Post(':postId/send-comment')
+  createComment(
+    @Headers('userId') userId: string,
+    @Param('postId') postId: string,
+    @Body() createCommentDto: CreateCommentDto,
+  ) {
+    return this.postsService.createComment(userId, postId, createCommentDto);
+  }
+
+  @Get(':postId/comment')
+  findByPostId(@Param('postId') postId: string) {
+    return this.postsService.findByPostId(postId);
   }
 
   @Get(':id')
