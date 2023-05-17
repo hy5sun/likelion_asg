@@ -6,6 +6,7 @@ import emailConfig from './config/emailConfig';
 import { validationSchema } from './config/validationSchema';
 import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from './http-exception.filter';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [ConfigModule.forRoot({
@@ -14,6 +15,16 @@ import { HttpExceptionFilter } from './http-exception.filter';
     isGlobal: true, // 전역 모듈로 동작하게 해서 어느 모듈에서나 사용 가능. 
     validationSchema, //환경 변수의 값에 대해 유효성 검사를 수행하도록 joi를 이용하여 유효성 검사 객체를 작성
   }),
+    TypeOrmModule.forRoot({
+      type: 'mysql',
+      host: 'localhost',
+      port: 3306, 
+      username: 'root',
+      password: 'sun0130!',
+      database: 'week6',
+      entities: [__dirname + '/**/*.entity{.ts, .js}'],
+      synchronize: true,
+    }),
     UsersModule, EmailModule],
   controllers: [],
   providers: [
