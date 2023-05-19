@@ -7,6 +7,7 @@ import { PostsModule } from './posts/posts.module';
 import { DmModule } from './dm/dm.module';
 import emailConfig from './config/emailConfig';
 import { SendGridModule } from '@anchan828/nest-sendgrid';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [
@@ -15,6 +16,19 @@ import { SendGridModule } from '@anchan828/nest-sendgrid';
     }),
     SendGridModule.forRoot({
       apikey: process.env.SENDGRID_API_KEY,
+    }),
+    TypeOrmModule.forRoot({
+      type: 'mysql',
+      host: process.env.DB_HOST,
+      port: +process.env.DB_PORT,
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_DATABASE,
+      synchronize: true, // 처음에만 true, 다음에는 false
+      autoLoadEntities: true,
+      charset: 'utf8mb4',
+      logging: true,
+      keepConnectionAlive: true,
     }),
     UserModule,
     EmailModule,

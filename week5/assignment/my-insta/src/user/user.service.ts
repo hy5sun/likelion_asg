@@ -4,26 +4,33 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { EmailService } from 'src/email/email.service';
-import { User } from './users.models';
 import { CreateUserDto } from './dto/create-user.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { UserEntity } from './entities/user.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly emailService: EmailService) {}
-  users: User[] = [];
+  constructor(
+    private readonly emailService: EmailService,
+    @InjectRepository(UserEntity)
+    private usersRepository: Repository<UserEntity>,
+  ) {}
 
   async createAccount(createUserDto: CreateUserDto) {
-    const { email, name, userId, password } = createUserDto;
+    const user = new UserEntity();
+    user.name = createUserDto.name;
+    user.email = createUserDto.email;
+    user.password = createUserDto.password;
+    user.userId = createUserDto.userId;
 
-    const user: User = {
-      email,
-      name,
-      userId,
-      password,
-    };
+    const idDupUser = await this.usersRepository.findOne({
+      where: { userId: createUserDto.userId },
+    }); // 아이디 중복 유저
 
-    const idDupUser = this.users.find((user) => user.userId === userId); // 아이디 중복 유저
-    const emailDupUser = this.users.find((user) => user.email === email); // 메일 중복 유저
+    const emailDupUser = await this.usersRepository.findOne({
+      where: { email: createUserDto.email },
+    }); // 메일 중복 유저
 
     if (idDupUser) {
       throw new ConflictException('이미 있는 아이디입니다.');
@@ -39,7 +46,7 @@ export class UserService {
       console.log(e);
     }
 
-    this.users.push(user); // 저장
+    await this.usersRepository.save(user);
 
     return user;
   }
@@ -55,7 +62,9 @@ export class UserService {
 
   async findUser(userId: string) {
     // 검색 통해서 유저 찾기
-    const user = this.users.find((user) => user.userId === userId);
+    const user = this.usersRepository.findOne({
+      where: { userId: userId },
+    });
 
     if (!user) {
       throw new NotFoundException('유저를 찾을 수 없습니다.');
@@ -65,6 +74,6 @@ export class UserService {
 
   async findAll() {
     // 테스트용 전체 유저 찾기
-    return this.users;
+    return this.usersRepository;
   }
 }

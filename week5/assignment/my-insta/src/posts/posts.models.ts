@@ -3,4 +3,5 @@ export interface Post {
   content: string;
   writer: string;
   createdAt: Date;
+  updatedAt: Date;
 }
