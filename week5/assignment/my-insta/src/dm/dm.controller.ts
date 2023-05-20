@@ -8,12 +8,12 @@ export class DmController {
 
   @Post('send')
   create(@Headers('userId') userId: string, @Body() createDmDto: CreateDmDto) {
-    return this.dmService.sendDM(userId, createDmDto);
+    return this.dmService.sendDm(userId, createDmDto);
   }
 
   @Get()
   findAll(@Headers('userId') userId: string) {
-    return this.dmService.findAllDM(userId);
+    return this.dmService.findAllDm(userId);
   }
 
   @Get(':receiverId') // 수신자

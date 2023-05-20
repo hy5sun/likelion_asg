@@ -4,7 +4,6 @@ import { UserService } from 'src/user/user.service';
 import { DmEntity } from './entities/dm.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ulid } from 'ulid';
 
 @Injectable()
 export class DmService {
@@ -18,7 +17,6 @@ export class DmService {
     // 디엠 보내기
     const { receiver, content } = createDmDto;
     const dm = new DmEntity();
-    dm.id = ulid();
     dm.receiverId = receiver;
     dm.content = content;
     dm.writerId = userId;
