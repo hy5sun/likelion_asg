@@ -1,20 +1,17 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { MyLogger } from './logging/my-logger.service';
 
 @Injectable()
 export class AppService {
-  private readonly logger = new Logger(AppService.name);
+  constructor(private myLogger: MyLogger) {}
 
   getHello(): string {
-    try {
-      this.logger.error('level: error');
-      this.logger.error('level: warn');
-      this.logger.log('level: log');
-      this.logger.verbose('level: verbose');
-      this.logger.debug('level: debug');
+    this.myLogger.error('level: error');
+    this.myLogger.error('level: warn');
+    this.myLogger.log('level: log');
+    this.myLogger.verbose('level: verbose');
+    this.myLogger.debug('level: debug');
 
-      return 'Hello World';
-    } catch (e) {
-      console.log(e);
-    }
+    return 'Hello World';
   }
 }
