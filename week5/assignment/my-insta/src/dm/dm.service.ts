@@ -14,7 +14,7 @@ export class DmService {
     private directRepository: Repository<DmEntity>,
   ) {}
 
-  async sendDM(userId: string, createDmDto: CreateDmDto) {
+  async sendDm(userId: string, createDmDto: CreateDmDto) {
     // 디엠 보내기
     const { receiver, content } = createDmDto;
     const dm = new DmEntity();
@@ -36,16 +36,16 @@ export class DmService {
     return dm;
   }
 
-  findAllDM(userId: string) {
+  findAllDm(userId: string) {
     // 디엠 목록 조회
     if (!userId) {
       throw new UnauthorizedException('로그인 해주세요.');
     }
-    const dm = this.directRepository.find({
+    const sentDm = this.directRepository.find({
       where: { writerId: userId },
     }); // 내가 보낸 디엠들로 추리기
 
-    return dm;
+    return sentDm;
   }
 
   findOneById(userId: string, receiverId: string) {

@@ -11,7 +11,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { PostEntity } from './entities/post.entity';
 import { Repository } from 'typeorm';
 import { CommentEntity } from './comments/entities/comment.entity';
-import { ulid } from 'ulid';
 
 @Injectable()
 export class PostsService {
@@ -26,7 +25,6 @@ export class PostsService {
   // 포스트 작성
   async createPost(userId: string, createPostDto: CreatePostDto) {
     const post = new PostEntity();
-    post.id = ulid();
     post.content = createPostDto.content;
     post.writerId = userId;
 
