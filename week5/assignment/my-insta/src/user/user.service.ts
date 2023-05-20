@@ -24,19 +24,19 @@ export class UserService {
     user.password = createUserDto.password;
     user.userId = createUserDto.userId;
 
-    const idDupUser = await this.usersRepository.findOne({
+    const idDuplicationUser = await this.usersRepository.findOne({
       where: { userId: createUserDto.userId },
     }); // 아이디 중복 유저
 
-    const emailDupUser = await this.usersRepository.findOne({
+    const emailDuplicationUser = await this.usersRepository.findOne({
       where: { email: createUserDto.email },
     }); // 메일 중복 유저
 
-    if (idDupUser) {
+    if (idDuplicationUser) {
       throw new ConflictException('이미 있는 아이디입니다.');
     }
 
-    if (emailDupUser) {
+    if (emailDuplicationUser) {
       throw new ConflictException('이미 가입된 이메일입니다.');
     }
 
