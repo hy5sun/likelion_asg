@@ -102,4 +102,15 @@ export class AuthService {
 
     return user;
   }
+
+  // 로그아웃
+  async logout() {
+    return {
+      token: '',
+      domain: 'localhost',
+      path: '/',
+      httpOnly: true,
+      maxAge: 0,
+    };
+  }
 }
