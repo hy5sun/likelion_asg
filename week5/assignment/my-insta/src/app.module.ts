@@ -12,6 +12,7 @@ import { DmModule } from './dm/dm.module';
 import emailConfig from './config/emailConfig';
 import { AuthGuard } from './auth/auth.guard';
 import authConfig from './config/authConfig';
+import { LoggerModule } from './logging/logger.module';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import authConfig from './config/authConfig';
     AuthModule,
     PostsModule,
     DmModule,
+    LoggerModule,
   ],
   controllers: [],
   providers: [
