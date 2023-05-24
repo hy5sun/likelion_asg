@@ -3,9 +3,10 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import * as uuid from 'uuid';
 import { EmailService } from 'src/email/email.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './entities/user.entity';
 import { Repository } from 'typeorm';
 
@@ -23,7 +24,7 @@ export class UserService {
     user.email = createUserDto.email;
     user.password = createUserDto.password;
     user.userId = createUserDto.userId;
-    user.signupVerifyToken = createUserDto.signupVerifyToken;
+    user.signupVerifyToken = uuid.v1();
 
     const idDupUser = await this.usersRepository.findOne({
       where: { userId: createUserDto.userId },
