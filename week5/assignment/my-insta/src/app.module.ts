@@ -1,18 +1,26 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { SendGridModule } from '@anchan828/nest-sendgrid';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { JwtModule } from '@nestjs/jwt';
+import { APP_GUARD } from '@nestjs/core';
 import { UserModule } from 'src/user/user.module';
 import { EmailModule } from './email/email.module';
 import { AuthModule } from './auth/auth.module';
 import { PostsModule } from './posts/posts.module';
 import { DmModule } from './dm/dm.module';
 import emailConfig from './config/emailConfig';
-import { SendGridModule } from '@anchan828/nest-sendgrid';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthGuard } from './auth/auth.guard';
+import authConfig from './config/authConfig';
 
 @Module({
   imports: [
+    JwtModule.register({
+      secret: process.env.SECRET_KEY,
+    }),
     ConfigModule.forRoot({
-      load: [emailConfig],
+      load: [emailConfig, authConfig],
+      isGlobal: true,
     }),
     SendGridModule.forRoot({
       apikey: process.env.SENDGRID_API_KEY,
@@ -37,6 +45,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     DmModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+  ],
 })
 export class AppModule {}
