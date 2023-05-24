@@ -23,4 +23,7 @@ export class SignupDto {
   @IsString()
   @Matches(/^[A-Za-z\d!@#$%^7*()]{8, 30}$/)
   password: string;
+
+  @IsString()
+  signupVerifyToken: string;
 }

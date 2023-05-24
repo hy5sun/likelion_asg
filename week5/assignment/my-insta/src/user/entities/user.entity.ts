@@ -28,6 +28,9 @@ export class UserEntity {
   @Column({ length: 30 })
   password: string;
 
+  @Column({ length: 60 })
+  signupVerifyToken: string;
+
   @OneToMany(() => PostEntity, (post) => post.writerId)
   posts: PostEntity[];
 

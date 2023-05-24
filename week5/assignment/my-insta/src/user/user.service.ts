@@ -23,6 +23,7 @@ export class UserService {
     user.email = createUserDto.email;
     user.password = createUserDto.password;
     user.userId = createUserDto.userId;
+    user.signupVerifyToken = createUserDto.signupVerifyToken;
 
     const idDupUser = await this.usersRepository.findOne({
       where: { userId: createUserDto.userId },
@@ -51,8 +52,8 @@ export class UserService {
     return user;
   }
 
+  // 인증 이메일 보내기
   async sendEmail(email: string) {
-    // 인증 이메일 보내기
     try {
       return await this.emailService.send(email);
     } catch (e) {
@@ -60,8 +61,8 @@ export class UserService {
     }
   }
 
+  // 검색 통해서 유저 찾기
   async findUser(userId: string) {
-    // 검색 통해서 유저 찾기
     const user = this.usersRepository.findOne({
       where: { userId: userId },
     });
@@ -72,8 +73,8 @@ export class UserService {
     return user;
   }
 
+  // 테스트용 전체 유저 찾기
   async findAll() {
-    // 테스트용 전체 유저 찾기
     return this.usersRepository;
   }
 }
