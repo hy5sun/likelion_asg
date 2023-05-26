@@ -35,23 +35,29 @@ export class AuthController {
   @UseGuards(AuthGuard)
   @Post('login')
   async login(@Body() loginDto: LoginDto, @Res() res: Response): Promise<any> {
-    const jwt = await this.authService.validateUser(
+    const isValidated = await this.authService.validateUser(
       loginDto.userId,
       loginDto.password,
     );
-    const accessToken = await this.authService.login(loginDto);
 
-    res.cookie('jwt', jwt, {
-      httpOnly: true, // 쿠키를 브라우저에서 사용 못 하도록 (XSS 같은 걸 차단하면서 보안 강화 목적)
-      maxAge: 24 * 60 * 60 * 1000, // 유효기간
-    });
-    return accessToken;
+    // 아이디 비번 모두 옳게 적었다면
+    if (isValidated) {
+      const accessToken = await this.authService.login(loginDto);
+
+      res.cookie('auth', accessToken, {
+        httpOnly: true, // 쿠키를 브라우저에서 사용 못 하도록 (XSS 같은 걸 차단하면서 보안 강화 목적)
+        maxAge: 24 * 60 * 60 * 1000, // 유효기간
+      });
+      return accessToken;
+    } else {
+      return '로그인 실패';
+    }
   }
 
   // 쿠키 jwt 잘 읽어오는지 확인
   @Get('cookie')
   async getCookie(@Req() req: Request, @Res() res: Response) {
-    const jwt = req.cookies['jwt'];
+    const jwt = req.cookies['auth'];
     return res.send(jwt);
   }
 
@@ -59,7 +65,7 @@ export class AuthController {
   @Post('logout')
   async logout(@Req() req: Request, @Res() res: Response) {
     const { token, ...option } = await this.authService.logout();
-    res.cookie('Authentication', token, option);
+    res.cookie('auth', token, option);
 
     /* 또 다른 방법
     res.cookie('jwt', '', { // jwt값 삭제
