@@ -15,10 +15,13 @@ export class AuthGuard implements CanActivate {
 
   // 얻은 정보를 내부 규칙으로 평가
   private validateRequest(request: any) {
-    const jwtString = request.headers.authorization.split('Bearer ')[1];
+    const [type, token] = request.headers.authorization.split(' ');
 
-    this.authService.verify(jwtString);
-
-    return true;
+    if (type === 'Bearer') {
+      this.authService.verify(token);
+      return true;
+    } else {
+      return false;
+    }
   }
 }

@@ -54,16 +54,9 @@ export class AuthController {
     }
   }
 
-  // 쿠키 jwt 잘 읽어오는지 확인
-  @Get('cookie')
-  async getCookie(@Req() req: Request, @Res() res: Response) {
-    const jwt = req.cookies['auth'];
-    return res.send(jwt);
-  }
-
   // 로그아웃
   @Post('logout')
-  async logout(@Req() req: Request, @Res() res: Response) {
+  async logout(@Res() res: Response) {
     const { token, ...option } = await this.authService.logout();
     res.cookie('auth', token, option);
 

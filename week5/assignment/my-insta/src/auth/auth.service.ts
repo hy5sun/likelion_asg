@@ -42,7 +42,7 @@ export class AuthService {
     const payload = { loginDto };
 
     return jwt.sign(payload, this.config.jwtSecret, {
-      expiresIn: '1d', // 만료시간
+      expiresIn: '3d', // 만료시간
       audience: 'example.com',
       issuer: 'example.com',
     });
@@ -107,7 +107,6 @@ export class AuthService {
   async logout() {
     return {
       token: '',
-      domain: 'localhost',
       path: '/',
       httpOnly: true,
       maxAge: 0,
