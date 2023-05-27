@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import * as uuid from 'uuid';
+import { nanoid } from 'nanoid';
 import { EmailService } from 'src/email/email.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserEntity } from './entities/user.entity';
@@ -24,7 +24,7 @@ export class UserService {
     user.email = createUserDto.email;
     user.password = createUserDto.password;
     user.userId = createUserDto.userId;
-    user.signupVerifyToken = uuid.v1();
+    user.signupVerifyToken = nanoid();
 
     const idDupUser = await this.usersRepository.findOne({
       where: { userId: createUserDto.userId },
