@@ -11,6 +11,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { PostEntity } from './entities/post.entity';
 import { Repository } from 'typeorm';
 import { CommentEntity } from './comments/entities/comment.entity';
+import AWS from 'aws-sdk';
 
 @Injectable()
 export class PostsService {
@@ -23,10 +24,34 @@ export class PostsService {
   ) {}
 
   // 포스트 작성
-  async createPost(userId: string, createPostDto: CreatePostDto) {
+  async createPost(
+    userId: string,
+    createPostDto: CreatePostDto,
+    file: Express.Multer.File,
+  ) {
+    AWS.config.update({
+      credentials: {
+        accessKeyId: process.env.ACCESS_KEY_ID,
+        secretAccessKey: process.env.SECRET_ACCESS_KEY,
+      },
+    });
+
+    // AWS s3 객체 생성
+    const s3 = new AWS.S3();
+
+    // 파일 업로드 시 필요한 정보들을 모아둔 객체 생성
+    const params = {
+      Bucket: process.env.AWS_S3_BUCKET_NAME,
+      Key: String(file.originalname),
+      Body: file.buffer,
+    };
+
+    const response = await s3.upload(params).promise();
+
     const post = new PostEntity();
     post.content = createPostDto.content;
     post.writerId = userId;
+    post.url = response.Location;
 
     if (!userId) {
       throw new UnauthorizedException('로그인 해주세요');
