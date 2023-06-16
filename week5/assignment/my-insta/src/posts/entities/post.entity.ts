@@ -5,11 +5,14 @@ import { CommonEntity } from 'src/common/entities/common.entity';
 
 @Entity('Post')
 export class PostEntity extends CommonEntity {
-  @Column({ nullable: false })
+  @Column()
   content: string;
 
   @Column()
   writerId: string;
+
+  @Column()
+  url: string;
 
   @ManyToOne(() => UserEntity, (user) => user.posts)
   @JoinColumn()

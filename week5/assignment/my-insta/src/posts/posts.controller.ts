@@ -8,22 +8,27 @@ import {
   Delete,
   Headers,
   Query,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { CreateCommentDto } from './comments/dto/create-comment.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   @Post('create')
+  @UseInterceptors(FileInterceptor('file'))
   create(
+    @UploadedFile() file: Express.Multer.File,
     @Headers('userId') userId: string,
     @Body() createPostDto: CreatePostDto,
   ) {
-    return this.postsService.createPost(userId, createPostDto);
+    return this.postsService.createPost(userId, createPostDto, file);
   }
 
   @Post(':postId/send-comment')
